@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>ZyngaScroller Demo</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="robots" content="noindex,nofollow">
+
+    <style type="text/css">
+        body
+        {
+            font-family: 'Trebuchet MS';
+        }
+
+        #relativeParent
+        {
+            border-radius:10px;
+            border: 1px solid #333;
+            position: relative;
+            height: 400px;
+            width: 500px;
+            overflow:hidden;
+        }
+
+        #absoluteScroller
+        {
+            margin: 0;
+            padding: 0;
+            position: absolute;
+            height: 3000px;
+            width: 3000px;
+            background-image: url(images/bg.png);
+        }
+
+    </style>
+
+    <!-- jquery -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.js" type="text/javascript"></script>
+
+    <!-- local js -->
+    <script type="text/javascript" src="js/jquery.signalR-1.0.0.js"></script>
+    <script type="text/javascript" src="js/jquery.zyngaScroller.js"></script>
+    <script type="text/javascript" src="js/jquery.signalRamp.js"></script>
+    <script type="text/javascript" src="js/underscore.js"></script>
+    <script type="text/javascript" src="js/scroller/raf.js"></script>
+    <script type="text/javascript" src="js/scroller/Animate.js"></script>
+    <script type="text/javascript" src="js/scroller/Scroller.js"></script>
+    <script type="text/javascript" src="js/scroller/EasyScroller.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $("#absoluteScroller").zyngaScroller({
+                proxyName: 'uniqueName'
+                , collab: true
+            });
+
+        });
+    </script>
+</head>
+<body>
+    <h2>ZyngaScroller Demo</h2>
+    <p>Below is a simple Zynga Scroller with SignalR Collaboration</p>
+
+    <div id="relativeParent">
+        <div id="absoluteScroller">
+        </div>
+    </div>
+
+</body>
+</html>
