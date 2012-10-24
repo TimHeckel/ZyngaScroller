@@ -1,43 +1,36 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
+
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>ZyngaScroller by TimHeckel</title>
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="javascripts/respond.js"></script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <!--[if lt IE 8]>
-    <link rel="stylesheet" href="stylesheets/ie.css">
-    <![endif]-->
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="ZyngaScroller : jQuery plugin for fast, collaborative kinetic scrolling" />
 
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>ZyngaScroller</title>
   </head>
+
   <body>
-      <div id="header">
-        <nav>
-          <li class="fork"><a href="https://github.com/TimHeckel/ZyngaScroller">View On GitHub</a></li>
-          <li class="downloads"><a href="https://github.com/TimHeckel/ZyngaScroller/zipball/master">ZIP</a></li>
-          <li class="downloads"><a href="https://github.com/TimHeckel/ZyngaScroller/tarball/master">TAR</a></li>
-          <li class="title">DOWNLOADS</li>
-        </nav>
-      </div><!-- end header -->
 
-    <div class="wrapper">
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/TimHeckel/ZyngaScroller">View on GitHub</a>
 
-      <section>
-        <div id="title">
-          <h1>ZyngaScroller</h1>
-          <p>jQuery plugin for fast, collaborative kinetic scrolling</p>
-          <hr>
-          <span class="credits left">Project maintained by <a href="https://github.com/TimHeckel">TimHeckel</a></span>
-          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span>
-        </div>
+          <h1 id="project_title">ZyngaScroller</h1>
+          <h2 id="project_tagline">jQuery plugin for fast, collaborative kinetic scrolling</h2>
 
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/TimHeckel/ZyngaScroller/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/TimHeckel/ZyngaScroller/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
         <h3>Fast, easy, and collaborative kinetic scrolling</h3>
 
 <p>jQuery.zyngaScroller.js is a jQuery plugin that wraps the excellent <a href="https://github.com/zynga/scroller">Zynga Scroller</a> as a simple jQuery plugin with a couple new additions: (1) <strong>Real-time collaboration</strong> is now possible by leveraging the <a href="https://github.com/SignalR/SignalR">SignalR</a> hook baked into the (jQuery.signalRamp.js)[<a href="https://github.com/TimHeckel/SignalRamp">https://github.com/TimHeckel/SignalRamp</a>] plugin, and (2) the version of <code>EasyScroller.js</code> that this project uses is different than the original Zynga Scroller with collaboration hooks and support for IE8 and above.</p>
@@ -67,9 +60,27 @@
 
 <p>Want to see this thing with collaboration turned on? <a href="example.html">Click here</a>!</p>
       </section>
-
     </div>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-    
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">ZyngaScroller maintained by <a href="https://github.com/TimHeckel">TimHeckel</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-35769235-2");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+
   </body>
 </html>
