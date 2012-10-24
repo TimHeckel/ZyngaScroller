@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>ZyngaScroller by TimHeckel</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/TimHeckel/ZyngaScroller">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/TimHeckel/ZyngaScroller/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/TimHeckel/ZyngaScroller/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>ZyngaScroller</h1>
+          <p>jQuery plugin for fast, collaborative kinetic scrolling</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/TimHeckel">TimHeckel</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h3>Fast, easy, and collaborative kinetic scrolling</h3>
+
+<p>jQuery.zyngaScroller.js is a jQuery plugin that wraps the excellent <a href="https://github.com/zynga/scroller">Zynga Scroller</a> as a simple jQuery plugin with a couple new additions: (1) <strong>Real-time collaboration</strong> is now possible by leveraging the <a href="https://github.com/SignalR/SignalR">SignalR</a> hook baked into the (jQuery.signalRamp.js)[<a href="https://github.com/TimHeckel/SignalRamp">https://github.com/TimHeckel/SignalRamp</a>] plugin, and (2) the version of <code>EasyScroller.js</code> that this project uses is different than the original Zynga Scroller with collaboration hooks and support for IE8 and above.</p>
+
+<p>To use the plugin, simply create some HTML that looks like this:</p>
+
+<pre><code>&lt;div id="relativeParent" style="position:relative;width:500px;height:400px;overflow:hidden;"&gt;
+    &lt;div id="absoluteScroller" style="position:absolute;width:3000px;height:3000px"&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+
+<p>Then create the scrolling canvas simply:</p>
+
+<pre><code>$("#absoluteScroller").zyngaScroller();
+</code></pre>
+
+<p>If you want real-time collaboration, ensure you have a reference to both the jQuery.signalRamp.js file AND the jquery.signaR-1.0.0.js file in your <code>&lt;head&gt;</code>, then instantiate the canvas with the following options:</p>
+
+<pre><code>$("#absoluteScroller").zyngaScroller({
+    proxyName: 'uniqueName' //share the SAME proxy name to enable collaboration
+    , collab: true //turned off by default
+}
+</code></pre>
+
+<h3>Live Demo</h3>
+
+<p>Want to see this thing with collaboration turned on? <a href="example.html">Click here</a>!</p>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
