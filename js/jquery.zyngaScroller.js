@@ -106,6 +106,9 @@
                 }
             });
         },
+        scroller: function () {
+            return $(this).data("zyngaScroller").options.es.scroller;
+        },
         destroy: function () {
             return this.each(function () {
                 var _self = $(this);

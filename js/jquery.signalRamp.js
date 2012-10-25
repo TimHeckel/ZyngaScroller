@@ -26,6 +26,18 @@
                 var _self = $(this);
                 if (!_self.data('signalRamp')) {
 
+                    //first create ids on any elements that have none...
+                    //a unique id is essential for ui syncing
+                    
+                    var _inc = 1000;
+                    _self.find("input[type='checkbox'],input[type='radio'],select,input[type='text'],textarea").each(function () {
+                        if (!$(this).attr("id")) {
+                            _inc++;
+                            $(this).attr("id", [options.proxyName, "_", _inc].join(''));
+                        }
+                    });
+
+                    //second, wire up the listeners
                     _self.find("input[type='checkbox'],input[type='radio'],select").bind('change', _chg);
                     _self.find("input[type='text'],textarea").bind('keyup', _chg);
 
