@@ -49,13 +49,14 @@
 
                     //set up collaboration
 
-                    if (options.collab) {
+                    if (options.collab.on) {
 
                         options.proxyName = options.proxyName || _guid();
                         options.clientId = _guid();
 
                         $(this).signalRamp({
                             proxyName: options.proxyName
+                            , url: options.collab.url
                             , callbacks: {
                                 bridgeInitialized: function (bridge, done) {
 
@@ -95,7 +96,7 @@
                     }
 
                     function send(pkg) {
-                        if (options.collab) {
+                        if (options.collab.on) {
                             $.extend(pkg, { id: options.clientId });
                             var bridge = _self.signalRamp("bridge");
                             bridge.invoke(pkg.name, pkg);
