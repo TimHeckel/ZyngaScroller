@@ -1,5 +1,6 @@
 ﻿/*
-* Created by Tim Heckel, &copy; 2012 
+* jQuery.zyngaScroller, v. 0.0.1
+* Created by Tim Heckel, 2012 
 * Licensed under the MIT.
 */
 
@@ -61,17 +62,13 @@
                                 bridgeInitialized: function (bridge, done) {
 
                                     bridge.on('onStart', function (obj) {
-                                        if (options.clientId !== obj.id) {
-                                            options.es.scroller.doTouchStart([{ pageX: obj.args[0], pageY: obj.args[1] }], obj.args[2]);
-                                        }
+                                        options.es.scroller.doTouchStart([{ pageX: obj.args[0], pageY: obj.args[1] }], obj.args[2]);
                                     });
 
                                     bridge.on('onEnd', function (obj) {
-                                        if (options.clientId !== obj.id) {
-                                            mover(obj.args[0].moves, function () {
-                                                options.es.scroller.doTouchEnd(obj.args[0].t);
-                                            });
-                                        }
+                                        mover(obj.args[0].moves, function () {
+                                            options.es.scroller.doTouchEnd(obj.args[0].t);
+                                        });
                                     });
 
                                     function mover(moves, cb) {
@@ -115,7 +112,6 @@
                 var _self = $(this);
                 _self.removeData("zyngaScroller");
             })
-
         }
     };
 

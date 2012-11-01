@@ -1,5 +1,5 @@
 ﻿/*
-* signalRamp v. 0.0.1
+* v. 0.0.2
 * Created by Tim Heckel, &copy; 2012 
 * Licensed under the MIT.
 */
@@ -7,6 +7,7 @@
 (function ($) {
     var methods = {
         init: function (options) {
+
             options = options || {};
             options.bindable = options.bindable || {};
             options.bindable.click = options.bindable.click || "signalRampClick";
@@ -16,50 +17,31 @@
             options.callbacks = options.callbacks || {};
             options.sensibility = (options.sensibility + 1) || 100;
             options.stop = false;
+            options.inc = 1000;
+            options.proxyName = options.proxyName || utils.guid();
+            options.clientId = utils.guid();
 
-            var cc = "." + options.bindable.click
-                , ch = "." + options.bindable.hover
-                , cd = "." + options.bindable.mousedown
-                , cu = "." + options.bindable.mouseup
-                , _custom = [cc, ",", ch, ",", cd, ",", cu].join('');
+            options.classes = {
+                cc: "." + options.bindable.click
+                , ch: "." + options.bindable.hover
+                , cd: "." + options.bindable.mousedown
+                , cu: "." + options.bindable.mouseup
+            };
+            options.classes.custom = [options.classes.cc, ",", options.classes.ch, ",", options.classes.cd, ",", options.classes.cu].join('');
 
             return this.each(function () {
                 var _self = $(this);
                 if (!_self.data('signalRamp')) {
 
-                    //first create ids on any elements that have none...
-                    //a unique id is essential for ui syncing
-
-                    var _inc = 1000;
-
                     //ensure that the parent element has an id
                     if (this.nodeName.toLowerCase().replace("#", "") === "document") {
                         _self.attr("id", "document");
                     } else if (!_self.attr("id")) {
-                        _self.attr("id", [options.proxyName, "_", _inc].join(''));
+                        _self.attr("id", [options.proxyName, "_", options.inc].join(''));
                     }
 
-                    //add ids to any missing bindable elements
-                    _self.find("input[type='checkbox'],input[type='radio'],select,input[type='text'],textarea," + _custom).each(function () {
-                        if (!$(this).attr("id")) {
-                            _inc++;
-                            $(this).attr("id", [options.proxyName, "_", _inc].join(''));
-                        }
-                    });
-
-                    //second, wire up the listeners
-                    _self.find("input[type='checkbox'],input[type='radio'],select").bind('change', locals._chg);
-                    _self.find("input[type='text'],textarea").bind('keyup', locals._chg);
-
-                    _self.find(cc).bind('click', locals._click);
-                    _self.find(cd).bind('mousedown', locals._down);
-                    _self.find(cu).bind('mouseup', locals._up);
-                    _self.find(ch).bind('mouseover', locals._over);
-                    _self.find(ch).bind('mouseout', locals._out);
-
-                    _self.find("input[type='checkbox'],input[type='radio'],select,input[type='text'],textarea," + _custom).data({ signalRamp: _self.attr("id") });
-                    options.proxyName = options.proxyName || locals.guid();
-                    options.clientId = locals.guid();
+                    _self.data({ signalRamp: { options: options} });
+                    bindables.attach(_self);
 
                     //set up signalr proxy server at signalGRR
                     $(function () {
@@ -67,8 +49,8 @@
                         options.bridge = connection.createProxy(options.proxyName);
 
                         options.bridge.on('receive', function (pkg) {
-                            if (pkg.clientId !== options.clientId)
-                                _self.signalRamp("receive", pkg);
+                            //if (pkg.clientId !== options.clientId) //defaults to others, so this is not explicitly required
+                            _self.signalRamp("receive", pkg);
                         });
 
                         var _start = function () {
@@ -85,21 +67,13 @@
                             _start();
                         }
                     });
-
-                    _self.data({ signalRamp: { options: options || {}} });
                 }
             });
         },
         receive: function (pkg) {
 
-            //set stop so propogation stops in case .trigger requeues event
-            var _options = null;
-
-            if ($("#" + pkg.id).data("signalRamp") === "document") {
-                _options = $(document).data("signalRamp").options;
-            } else {
-                _options = $("#" + $("#" + pkg.id).data("signalRamp")).data("signalRamp").options;
-            }
+            //set stop so propagation stops in case .trigger requeues event
+            var _options = utils.options($("#" + pkg.id).data("signalRamp"));
 
             _options.stop = true;
 
@@ -130,29 +104,72 @@
 
             _options.callbacks.dataReceive && _options.callbacks.dataReceive(pkg);
         },
+        rewire: function () {
+            return this.each(function () {
+                var _self = $(this);
+                bindables.detatch(_self);
+                bindables.attach(_self);
+            });
+        },
         destroy: function () {
             return this.each(function () {
                 var _self = $(this);
                 if (_self.data("signalRamp")) {
-                    _self.find("input[type='checkbox'],input[type='radio'],select").unbind('mouseup', locals._chg);
-                    _self.find("input[type='text'],textarea").unbind('keyup', locals._chg);
-                    _self.find(cc).unbind('click', locals._click);
-                    _self.find(cd).unbind('mousedown', locals._down);
-                    _self.find(cu).unbind('mouseup', locals._up);
-                    _self.find(ch).unbind('mouseover', locals._over);
-                    _self.find(ch).unbind('mouseout', locals._out);
-
-                    _self.find("input[type='checkbox'],input[type='radio'],select,input[type='text'],textarea," + _custom).removeData("signalRamp");
+                    bindables.detatch(_self);
+                    _self.find("input[type='checkbox'],input[type='radio'],select,input[type='text'],textarea," + options.classes.custom).removeData("signalRamp");
                     _self.removeData("signalRamp");
                 }
-            })
+            });
         },
         bridge: function () {
             return $(this).data("signalRamp").options.bridge;
         }
     };
 
-    var locals = {
+    var bindables = {
+        attach: function (_self) {
+
+            var options = _self.data("signalRamp").options;
+            var c = options.classes;
+
+            //add ids to any missing bindable elements
+            _self.find("input[type='checkbox'],input[type='radio'],select,input[type='text'],textarea," + c.custom).each(function () {
+                if (!$(this).attr("id")) {
+                    options.inc++;
+                    $(this).attr("id", [options.proxyName, "_", options.inc].join(''));
+                }
+            });
+
+            //second, wire up the listeners
+            _self.find("input[type='checkbox'],input[type='radio'],select").bind('change', utils._chg);
+            _self.find("input[type='text'],textarea").bind('keyup', utils._chg);
+
+            _self.find(c.cc).bind('click', utils._click);
+            _self.find(c.cd).bind('mousedown', utils._down);
+            _self.find(c.cu).bind('mouseup', utils._up);
+            _self.find(c.ch).bind('mouseover', utils._over);
+            _self.find(c.ch).bind('mouseout', utils._out);
+
+            _self.find("input[type='checkbox'],input[type='radio'],select,input[type='text'],textarea," + c.custom).data({ signalRamp: _self.attr("id") });
+        }
+        , detatch: function (_self) {
+            if (_self.data("signalRamp")) {
+                var options = _self.data("signalRamp").options;
+                var c = options.classes;
+
+                _self.find("input[type='checkbox'],input[type='radio'],select").unbind('mouseup', utils._chg);
+                _self.find("input[type='text'],textarea").unbind('keyup', utils._chg);
+                _self.find(c.cc).unbind('click', utils._click);
+                _self.find(c.cd).unbind('mousedown', utils._down);
+                _self.find(c.cu).unbind('mouseup', utils._up);
+                _self.find(c.ch).unbind('mouseover', utils._over);
+                _self.find(c.ch).unbind('mouseout', utils._out);
+
+            }
+        }
+    };
+
+    var utils = {
         _rs: null
         , guid: function () {
             return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -164,33 +181,33 @@
             if (id === "document") {
                 return $(document).data("signalRamp").options;
             } else {
-                return $("#" + $("#" + id).data("signalRamp")).data("signalRamp").options;
+                return $("#" + id).data("signalRamp").options;
             }
         }
         , _chg: function (e) {
             var _self = $(this);
-            var opts = locals.options(_self.data("signalRamp"));
-            window.clearTimeout(locals._rx);
-            locals._rx = window.setTimeout(function () { locals._run(_self); }, opts.sensibility);
+            var opts = utils.options(_self.data("signalRamp"));
+            window.clearTimeout(utils._rx);
+            utils._rx = window.setTimeout(function () { utils._run(_self); }, opts.sensibility);
         }
         , _click: function (e) {
-            locals.run($(this), "click");
+            utils.run($(this), "click");
         }
         , _over: function (e) {
-            locals.run($(this), "hoverOver");
+            utils.run($(this), "hoverOver");
         }
         , _out: function (e) {
-            locals.run($(this), "hoverOut");
+            utils.run($(this), "hoverOut");
         }
         , _down: function (e) {
-            locals.run($(this), "mousedown");
+            utils.run($(this), "mousedown");
         }
         , _up: function (e) {
-            locals.run($(this), "mouseup");
+            utils.run($(this), "mouseup");
         }
         , _run: function (obj, _typeOverride) {
             var _id = obj.attr("id"), _type = _typeOverride || obj.attr("type")
-                , _check = null, _val = '', _options = locals.options(obj.data("signalRamp"));
+                , _check = null, _val = '', _options = utils.options(obj.data("signalRamp"));
             switch (_type) {
                 case "click":
                 case "hoverOver":
@@ -224,7 +241,7 @@
                 _options.stop = false;
             }
         }
-    }
+    };
 
     $.fn.signalRamp = function (method) {
         if (methods[method]) {
