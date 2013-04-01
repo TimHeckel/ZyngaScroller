@@ -1,5 +1,6 @@
 ﻿/*
-* Created by Tim Heckel, &copy; 2012 
+* jQuery.zyngaScroller, v. 0.0.1
+* Created by Tim Heckel, 2012 
 * Licensed under the MIT.
 */
 
@@ -35,42 +36,39 @@
                     });
 
                     //set up cursor
-                    var cursCoords = ($.browser.msie) ? "" : " 4 4";
-                    var dragCursor = ($.browser.mozilla) ? "-moz-grab" : "url(" + options.cursorUrl + "/openhand.cur)" + cursCoords + ", move";
+                    var cursCoords = " 4 4";
+                    var dragCursor = "url(" + options.cursorUrl + "/openhand.cur)" + cursCoords + ", move";
                     _self.css({ cursor: dragCursor });
                     _self.mousedown(function (e) {
-                        dragCursor = ($.browser.mozilla) ? "-moz-grabbing" : "url(" + options.cursorUrl + "/closedhand.cur)" + cursCoords + ", move";
+                        dragCursor = "url(" + options.cursorUrl + "/closedhand.cur)" + cursCoords + ", move";
                         _self.css({ cursor: dragCursor });
                     });
                     _self.mouseup(function (e) {
-                        dragCursor = ($.browser.mozilla) ? "-moz-grab" : "url(" + options.cursorUrl + "/openhand.cur)" + cursCoords + ", move";
+                        dragCursor = "url(" + options.cursorUrl + "/openhand.cur)" + cursCoords + ", move";
                         _self.css({ cursor: dragCursor });
                     });
 
                     //set up collaboration
 
-                    if (options.collab) {
+                    if (options.collab.on) {
 
                         options.proxyName = options.proxyName || _guid();
                         options.clientId = _guid();
 
                         $(this).signalRamp({
                             proxyName: options.proxyName
+                            , url: options.collab.url
                             , callbacks: {
                                 bridgeInitialized: function (bridge, done) {
 
                                     bridge.on('onStart', function (obj) {
-                                        if (options.clientId !== obj.id) {
-                                            options.es.scroller.doTouchStart([{ pageX: obj.args[0], pageY: obj.args[1] }], obj.args[2]);
-                                        }
+                                        options.es.scroller.doTouchStart([{ pageX: obj.args[0], pageY: obj.args[1] }], obj.args[2]);
                                     });
 
                                     bridge.on('onEnd', function (obj) {
-                                        if (options.clientId !== obj.id) {
-                                            mover(obj.args[0].moves, function () {
-                                                options.es.scroller.doTouchEnd(obj.args[0].t);
-                                            });
-                                        }
+                                        mover(obj.args[0].moves, function () {
+                                            options.es.scroller.doTouchEnd(obj.args[0].t);
+                                        });
                                     });
 
                                     function mover(moves, cb) {
@@ -95,7 +93,7 @@
                     }
 
                     function send(pkg) {
-                        if (options.collab) {
+                        if (options.collab.on) {
                             $.extend(pkg, { id: options.clientId });
                             var bridge = _self.signalRamp("bridge");
                             bridge.invoke(pkg.name, pkg);
@@ -106,12 +104,14 @@
                 }
             });
         },
+        scroller: function () {
+            return $(this).data("zyngaScroller").options.es.scroller;
+        },
         destroy: function () {
             return this.each(function () {
                 var _self = $(this);
                 _self.removeData("zyngaScroller");
             })
-
         }
     };
 
