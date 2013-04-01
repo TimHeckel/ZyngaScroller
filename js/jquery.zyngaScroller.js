@@ -36,15 +36,15 @@
                     });
 
                     //set up cursor
-                    var cursCoords = ($.browser.msie) ? "" : " 4 4";
-                    var dragCursor = ($.browser.mozilla) ? "-moz-grab" : "url(" + options.cursorUrl + "/openhand.cur)" + cursCoords + ", move";
+                    var cursCoords = " 4 4";
+                    var dragCursor = "url(" + options.cursorUrl + "/openhand.cur)" + cursCoords + ", move";
                     _self.css({ cursor: dragCursor });
                     _self.mousedown(function (e) {
-                        dragCursor = ($.browser.mozilla) ? "-moz-grabbing" : "url(" + options.cursorUrl + "/closedhand.cur)" + cursCoords + ", move";
+                        dragCursor = "url(" + options.cursorUrl + "/closedhand.cur)" + cursCoords + ", move";
                         _self.css({ cursor: dragCursor });
                     });
                     _self.mouseup(function (e) {
-                        dragCursor = ($.browser.mozilla) ? "-moz-grab" : "url(" + options.cursorUrl + "/openhand.cur)" + cursCoords + ", move";
+                        dragCursor = "url(" + options.cursorUrl + "/openhand.cur)" + cursCoords + ", move";
                         _self.css({ cursor: dragCursor });
                     });
 
